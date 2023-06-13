@@ -1,0 +1,14 @@
+{
+  "daemon_url": "http://localhost:2375",
+  "service": {
+    "name": "redis",
+    "image": "redis:7.2-rc-bullseye",
+    "ports": [
+      {
+        "targetPort": 6379,
+        "publishedPort": 6379
+      }
+    ]
+  },
+  "preserveLeader": false
+}

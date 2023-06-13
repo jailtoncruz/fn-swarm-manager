@@ -1,0 +1,27 @@
+{
+	"name": "swarm-manager",
+	"version": "1.0.0",
+	"description": "The docker swarm api manager",
+	"main": "dist/fn-entrypoint.js",
+	"author": "Jailton Cruz",
+	"license": "Apache-2.0",
+	"scripts": {
+		"start": "dist dist/fn-entrypoint.js",
+		"dev": "tsx watch src/index.ts",
+		"build": "tsc",
+		"deploy:dev": "npm run build && fn -v deploy --app manager --local",
+		"deploy:prod": "npm run build && fn -v deploy --app docker-swarm",
+		"invoke:dev": "fn -v invoke manager manager",
+		"invoke:prod": "fn -v invoke docker-swarm manager"
+	},
+	"dependencies": {
+		"@fnproject/fdk": ">=0.0.54",
+		"axios": "^1.4.0"
+	},
+	"devDependencies": {
+		"@rocketseat/eslint-config": "^1.2.0",
+		"@types/node": "^20.3.0",
+		"tsx": "^3.12.7",
+		"typescript": "^5.1.3"
+	}
+}
