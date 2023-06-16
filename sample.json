@@ -1,5 +1,4 @@
 {
-  "daemon_url": "http://localhost:2375",
   "service": {
     "name": "redis",
     "image": "redis:7.2-rc-bullseye",
@@ -10,5 +9,7 @@
       }
     ]
   },
-  "preserveLeader": false
+  "preserveLeader": false,
+  "compartment_id": "",
+  "vault_id": ""
 }

@@ -5,10 +5,12 @@ export interface InputService {
     targetPort: number
     publishedPort: number
   }[]
+  environments?: string[]
 }
 
 export interface Input {
-  daemon_url: string
   service: InputService
   preserveLeader?: boolean
+  compartment_id: string
+  vault_id: string
 }

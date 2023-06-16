@@ -22,6 +22,8 @@ export async function createService(
     TaskTemplate: {
       ContainerSpec: {
         Image: service.image,
+        Env: service.environments,
+        Mounts: [],
       },
     },
     Mode: {

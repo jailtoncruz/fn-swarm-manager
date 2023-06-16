@@ -7,7 +7,6 @@
 	"license": "Apache-2.0",
 	"scripts": {
 		"start": "dist dist/fn-entrypoint.js",
-		"dev": "tsx watch src/index.ts",
 		"build": "tsc",
 		"deploy:dev": "npm run build && fn -v deploy --app manager --local",
 		"deploy:prod": "npm run build && fn -v deploy --app docker-swarm",
@@ -16,7 +15,9 @@
 	},
 	"dependencies": {
 		"@fnproject/fdk": ">=0.0.54",
-		"axios": "^1.4.0"
+		"@jailtoncruz/oci-vault-env": "^1.0.4",
+		"axios": "^1.4.0",
+		"oci-common": "^2.62.2"
 	},
 	"devDependencies": {
 		"@rocketseat/eslint-config": "^1.2.0",

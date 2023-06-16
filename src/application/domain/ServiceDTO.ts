@@ -14,6 +14,17 @@ interface NetworkIP {
   Addr: string
 }
 
+export interface ContainerSpecMount {
+  Target: string
+  Source: string
+  Type: string
+  ReadOnly: boolean
+  Consistency: string
+  BindOptions: any
+  VolumeOptions: any
+  TmpfsOptions: any
+}
+
 export interface ServiceDTO {
   ID: string
   Version: {
