@@ -1,7 +1,8 @@
-interface EndpointPort {
+export interface EndpointPort {
   Protocol: 'tcp'
   TargetPort: number
   PublishedPort: number
+  PublishMode: string
 }
 
 interface EndpointSpec {

@@ -1,12 +1,16 @@
 import { Axios } from 'axios'
 import { InputService } from '../../../core/domain/Input'
+import { ServiceConfig } from '../../domain/ServiceConfig'
 import { ServiceDTO } from '../../domain/ServiceDTO'
+import { logger } from '../../lib/logger'
+import { createListMountModel } from './create-list-mount-model'
+import { createListPortModel } from './create-list-port-model'
 
 export async function updateService(
   api: Axios,
   currentService: ServiceDTO,
   inputService: InputService,
-  replicas?: number,
+  config: ServiceConfig,
 ) {
   const { data } = await api.post<ServiceDTO>(
     `/services/${currentService.ID}/update`,
@@ -14,22 +18,22 @@ export async function updateService(
       Name: inputService.name,
       EndpointSpec: {
         Mode: 'vip',
-        Ports: inputService.ports?.map((p) => {
-          return {
-            Protocol: 'tcp',
-            PublishedPort: p.publishedPort,
-            TargetPort: p.targetPort,
-          }
-        }),
+        Ports: createListPortModel(inputService.ports),
       },
       TaskTemplate: {
         ContainerSpec: {
           Image: inputService.image,
+          Env: inputService.environments,
+          Mounts: createListMountModel(
+            inputService.sharedFolders,
+            config,
+            inputService.name,
+          ),
         },
       },
       Mode: {
         Replicated: {
-          Replicas: replicas,
+          Replicas: config?.REPLICAS,
         },
       },
     },
@@ -40,8 +44,8 @@ export async function updateService(
     },
   )
 
-  console.log(
-    `Service [${inputService.name}] UPDATED on [${replicas}] replicas`,
+  logger.info(
+    `Service [${inputService.name}] UPDATED on [${config.REPLICAS}] replicas`,
   )
   return data
 }

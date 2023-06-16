@@ -1,20 +1,24 @@
 import fdk from '@fnproject/fdk'
 import { getSecrets } from '@jailtoncruz/oci-vault-env'
-import axios from 'axios'
 import { ConfigFileAuthenticationDetailsProvider } from 'oci-common'
-import { getAvaliableNodes } from './application/usecases/get-avaliable-nodes'
-import { listNodes } from './application/usecases/nodes/list-nodes'
+import { ServiceConfig } from './application/domain/ServiceConfig'
+import { logger } from './application/lib/logger'
+import { createAxiosClient } from './application/usecases/create-axios-client'
+import { getEnvironmentVariablesVault } from './application/usecases/get-environment-variables-vault'
+import { getAvaliableNodes } from './application/usecases/nodes/get-avaliable-nodes'
 import { createService } from './application/usecases/service/create-service'
 import { getService } from './application/usecases/service/get-service'
 import { updateService } from './application/usecases/service/update-service'
 import { Input, InputService } from './core/domain/Input'
 
 fdk.handle(async function (input: Input, ctx) {
-  console.log('Solicitação recebida', JSON.stringify({ input, ctx }))
-  const { DAEMON_URL } = ctx._config
-  const api = axios.create({
-    baseURL: DAEMON_URL,
-  })
+  logger.info('Request recived')
+  logger.info('Function input', JSON.stringify(input))
+  logger.info('Function config', JSON.stringify(ctx._config))
+
+  const { DAEMON_URL, REGISTRY_AUTH, SWARM_WORKER_SHARED_FOLDER } = ctx._config
+
+  const api = createAxiosClient(DAEMON_URL, REGISTRY_AUTH)
 
   try {
     const provider = new ConfigFileAuthenticationDetailsProvider()
@@ -24,36 +28,34 @@ fdk.handle(async function (input: Input, ctx) {
       input.vault_id,
     )
 
-    console.log('secrets obtained', secrets.length)
+    const { compartment_id, vault_id, preserveLeader } = input
+    const environments = await getEnvironmentVariablesVault(
+      compartment_id,
+      vault_id,
+    )
 
-    const nodes = await listNodes(api)
-    console.log('nodes obtained', nodes.length)
+    const avaliableNodes = await getAvaliableNodes(api, preserveLeader)
 
-    const avaliableNodes = getAvaliableNodes(nodes, input.preserveLeader)
-    const replicas = avaliableNodes.length
     const newService: InputService = {
       ...input.service,
-      environments: secrets.map((s) =>
-        s.name.concat('=').concat(s.value ?? ''),
-      ),
+      environments,
     }
 
-    console.log('service dto', newService)
+    const serviceConfig: ServiceConfig = {
+      SWARM_WORKER_SHARED_FOLDER,
+      REPLICAS: avaliableNodes.length,
+    }
 
     let service = await getService(api, input.service.name)
-    if (!service) service = await createService(api, newService, replicas)
-    else
-      service = await updateService(
-        api,
-        service,
-        newService,
-        avaliableNodes.length,
-      )
 
-    console.log('FINISH')
+    if (!service) service = await createService(api, newService, serviceConfig)
+    else service = await updateService(api, service, newService, serviceConfig)
+
+    logger.info('Function finished')
+    logger.info(JSON.stringify(newService))
     return { service, newService, secrets }
   } catch (_err) {
-    console.log('Finished with error', _err)
+    logger.error(JSON.stringify(_err))
     return {
       Error: (_err as Error).message ?? 'ERROR',
       input,

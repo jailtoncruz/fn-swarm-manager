@@ -17,6 +17,7 @@
 		"@fnproject/fdk": ">=0.0.54",
 		"@jailtoncruz/oci-vault-env": "^1.0.4",
 		"axios": "^1.4.0",
+		"log4js": "^6.9.1",
 		"oci-common": "^2.62.2"
 	},
 	"devDependencies": {

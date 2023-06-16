@@ -6,6 +6,7 @@ export interface InputService {
     publishedPort: number
   }[]
   environments?: string[]
+  sharedFolders?: string[] // in container, likes workdir or public
 }
 
 export interface Input {

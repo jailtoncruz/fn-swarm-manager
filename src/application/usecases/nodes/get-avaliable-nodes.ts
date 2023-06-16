@@ -1,9 +1,11 @@
-import { NodeDTO } from '../domain/NodeDTO'
+import { Axios } from 'axios'
+import { listNodes } from './list-nodes'
 
-export function getAvaliableNodes(
-  nodes: NodeDTO[],
+export async function getAvaliableNodes(
+  api: Axios,
   preserveLeader: boolean = false,
 ) {
+  const nodes = await listNodes(api)
   const leader = nodes.find((node) => node.Spec.Role.includes('manager'))
   let avaliableNodes = nodes.filter((node) => node.Status.State === 'ready')
 

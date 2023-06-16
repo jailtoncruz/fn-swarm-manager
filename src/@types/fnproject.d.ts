@@ -1,4 +1,10 @@
-interface Config {
+interface CustomConfig {
+  DAEMON_URL: string
+  REGISTRY_AUTH: string
+  SWARM_WORKER_SHARED_FOLDER: string
+}
+
+interface Config extends CustomConfig {
   PATH: string
   HOSTNAME: string
   FN_TYPE: string
@@ -10,10 +16,6 @@ interface Config {
   HOME: string
   OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM: string
   OCI_PRIVATEKEY: string
-  OCI_TENANCY: string
-  OCI_USER: string
-  OCI_FINGERPRINT: string
-  DAEMON_URL: string
 }
 
 interface Context {
