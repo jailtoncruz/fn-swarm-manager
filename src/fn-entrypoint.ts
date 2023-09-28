@@ -44,6 +44,7 @@ fdk.handle(async function (input: Input, ctx) {
     const serviceConfig: ServiceConfig = {
       SWARM_WORKER_SHARED_FOLDER,
       REPLICAS: avaliableNodes.length,
+      GLOBAL: input.global ?? true,
     }
 
     let service = await getService(api, input.service.name)
@@ -55,7 +56,7 @@ fdk.handle(async function (input: Input, ctx) {
     logger.info(JSON.stringify(newService))
     return { service, newService, secrets }
   } catch (_err) {
-    logger.error(JSON.stringify(_err))
+    console.error(JSON.stringify(_err))
     return {
       Error: (_err as Error).message ?? 'ERROR',
       input,

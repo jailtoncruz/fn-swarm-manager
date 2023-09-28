@@ -31,11 +31,9 @@ export async function updateService(
           ),
         },
       },
-      Mode: {
-        Replicated: {
-          Replicas: config?.REPLICAS,
-        },
-      },
+      Mode: config.GLOBAL
+        ? { Global: {} }
+        : { Replicated: { Replicas: config.REPLICAS } },
     },
     {
       params: {

@@ -1,15 +1,16 @@
 {
   "service": {
-    "name": "redis",
-    "image": "redis:7.2-rc-bullseye",
+    "name": "web",
+    "image": "nginx",
     "ports": [
       {
-        "targetPort": 6379,
-        "publishedPort": 6379
+        "targetPort": 80,
+        "publishedPort": 80
       }
     ]
   },
   "preserveLeader": false,
+  "global": true,
   "compartment_id": "",
   "vault_id": ""
 }

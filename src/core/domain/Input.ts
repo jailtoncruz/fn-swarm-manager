@@ -11,7 +11,9 @@ export interface InputService {
 
 export interface Input {
   service: InputService
-  preserveLeader?: boolean
   compartment_id: string
   vault_id: string
+
+  global?: boolean
+  preserveLeader?: boolean
 }

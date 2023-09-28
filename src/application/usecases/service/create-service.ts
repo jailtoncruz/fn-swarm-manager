@@ -28,11 +28,9 @@ export async function createService(
         ),
       },
     },
-    Mode: {
-      Replicated: {
-        Replicas: config.REPLICAS,
-      },
-    },
+    Mode: config.GLOBAL
+      ? { Global: {} }
+      : { Replicated: { Replicas: config.REPLICAS } },
   })
 
   logger.info(

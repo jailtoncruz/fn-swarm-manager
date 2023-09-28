@@ -1,4 +1,4 @@
 schema_version: 20180708
 name: manager
-version: 0.0.94
+version: 0.0.104
 runtime: docker

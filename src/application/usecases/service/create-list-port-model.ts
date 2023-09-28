@@ -11,7 +11,7 @@ export function createListPortModel(
       Protocol: 'tcp',
       PublishedPort: port.publishedPort,
       TargetPort: port.targetPort,
-      PublishMode: 'ingress',
+      PublishMode: 'host',
     }
   })
 }
